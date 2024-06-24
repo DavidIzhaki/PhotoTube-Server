@@ -2,7 +2,6 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import userRouter from './routes/userRoutes.js'
 import videoRouter from './routes/videoRoutes.js'
-import commentRouter from './routes/commentRoutes.js'
 import mongoose from 'mongoose'
 import customEnv from 'custom-env'
 import cors from 'cors';
@@ -31,6 +30,7 @@ server.use('/api/users', userRouter);
 server.use('/api/users', videoRouter);
 server.use('/api/videos', videoRouter);
 server.use('/api/users', commentRouter);
+server.use('/api/comments', commentRouter);
 
 server.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

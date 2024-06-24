@@ -2,7 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import userRouter from './routes/userRoutes.js'
 import videoRouter from './routes/videoRoutes.js'
-import commentRouter from './routes/commentRoutes.js'
+import commentRouter from './routes/commentRoutes'
 import mongoose from 'mongoose'
 import customEnv from 'custom-env'
 import cors from 'cors';
