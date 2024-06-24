@@ -7,10 +7,10 @@ const router = express.Router();
 
 router.get('/', videoController.getVideos);
 router.get('/:id/videos/:pid', userController.getVideoOfUser);
-router.patch('/:id/videos/:pid', userController.isLoggedIn, userController.updateVideoOfUser);
-router.delete('/:id/videos/:pid', userController.isLoggedIn, userController.deleteVideoOfUser);
+router.patch('/:id/videos/:pid', userController.isLoggedIn, videoController.updateVideoOfUser);
+router.delete('/:id/videos/:pid', userController.isLoggedIn, videoController.deleteVideoOfUser);
 router.get('/:id/videos', userController.getUserVideos);
-router.post('/:id/videos',userController.isLoggedIn, userController.createVideo)
+router.post('/:id/videos',userController.isLoggedIn, videoController.createVideo)
 
 
 export default router
