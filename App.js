@@ -24,7 +24,7 @@ server.use(express.static(path.join(__dirname, 'public')));
 server.use(bodyParser.urlencoded({ limit: '100mb', extended: true }))
 server.use(express.json({limit: '100mb'}));
 
-server.use('/users', userRouter);
+server.use('/api/users', userRouter);
 
 server.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
