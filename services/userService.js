@@ -8,7 +8,7 @@ const createUser = async (username, password, gender,displayname, profileImg) =>
     if (existingUser) {
         throw new Error('Username already taken');
     }
-    console.log(profileImg)
+  
     const user = new User({ username, password, displayname, gender, profileImg });
     await user.save();
     return user;
