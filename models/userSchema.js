@@ -24,6 +24,10 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+   videoList: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
 
 }, );
 
