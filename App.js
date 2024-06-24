@@ -26,11 +26,15 @@ server.use(express.static(path.join(__dirname, 'public')));
 server.use(bodyParser.urlencoded({ limit: '100mb', extended: true }))
 server.use(express.json({limit: '100mb'}));
 
+<<<<<<< rom_server_branch
 // use routes
 server.use('/api/users', userRouter);
 server.use('/api/users', videoRouter);
 server.use('/api/videos', videoRouter);
 server.use('/api/users', commentRouter);
+=======
+server.use('/api/users', userRouter);
+>>>>>>> main
 
 server.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

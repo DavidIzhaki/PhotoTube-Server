@@ -35,10 +35,36 @@ const getUser = async (req, res) => {
             return res.status(404).send({ message: "User not found" });
         }
 
+
         const UserData = {
             displayname: user.displayname,
             profileImg: user.profileImg,
             videoList: user.videoList,
+        };
+
+        res.send(UserData); // Send only the selected user data
+    } catch (error) {
+        console.error("Error finding user:", error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+}
+
+const getInfoUser = async (req, res) => {
+
+    try {
+        const userId = req.params.id;
+        const user = await userService.getUser(userId);
+        if (!user) {
+            return res.status(404).send({ message: "User not found" });
+        }
+        
+
+        const UserData = {
+            username: user.username,
+            password: user.password,
+            displayname: user.displayname,
+            gender: user.gender,
+            profileImg: user.profileImg,      
         };
 
         res.send(UserData); // Send only the selected user data
@@ -86,26 +112,30 @@ function isLoggedIn(req, res, next) {
 const updateUser = async (req, res) => {
     try {
         const userId = req.user.id; 
-        const { displayname,password, profileImg } = req.body;
-
+        const { displayname,password, gender, profileImg } = req.body;
+       console.log(gender)
         // Prepare the update object based on provided data
         const updateData = {};
         if (displayname) updateData.displayname = displayname;
         if (password) updateData.password = password;
+        if (gender) updateData.gender = gender;
         if (profileImg) updateData.profileImg = profileImg;
-
+        
         const updatedUser = await userService.updateUser(userId, updateData);
 
         if (!updatedUser) {
             return res.status(404).json({ message: "User not found" });
         }
-
+       
+        console.log( updatedUser.displayname)
+        console.log( updatedUser.password)
+        console.log( updatedUser.videoList)
         res.status(201).json({
             message: "User updated successfully",
             user: {
-                displayName: updatedUser.displayname,
-                password: updatedUser.password,
-                profilePic: updatedUser.profilepic,
+                displayname: updatedUser.displayname,
+                profileImg: updatedUser.profileImg,
+                videoList: updatedUser.videoList,
             }
         });
     } catch (error) {
@@ -140,16 +170,12 @@ async function login(req, res) {
     const user = await userService.login(req.body.username, req.body.password)
     if (user) {
         const token = tokenService.createToken(user._id)
-        res.json({ result: 'Success', token: token, user: {
-            displayname: user.displayname,
-            profileImg: user.profileImg
-        } })
+        res.json({ result: 'Success', token: token,  userId: user._id })
     }
     else {
         res.json({ result: 'Failure', reason: 'Invalid username or password' })
     }
 }
-
 
 export default { 
           createUser,
@@ -160,3 +186,5 @@ export default {
           isLoggedIn,
           deleteUser,
         };
+
+
