@@ -27,7 +27,8 @@ const getVideos = async (req, res) => {
              userId: video.createdBy, 
              createdBy: userMap[video.createdBy.toString()], 
              date: new Date(video.date).toISOString() ,
-            
+             comments: video.comments,
+             _Id: video._id
          }));
          
          res.json(modifiedVideos);
@@ -53,8 +54,11 @@ const getVideo = async (req, res) => {
             imageUrl: videoResponse.imageUrl,
             videoUrl: videoResponse.videoUrl,
             createdBy: userResponse.username, 
-            userId:userResponse._id,    
+            userId:userResponse._id, 
+            comments: videoResponse.comments,
+            _Id: videoResponse._id
         };
+        
         res.send(videoData); // Send only the selected user data
     } catch (error) {
         console.error('Failed to fetch video:', error.message);
@@ -100,7 +104,8 @@ const updateVideo = async (req, res) => {
             videoUrl: updatedVideo.videoUrl,
             createdBy: userResponse.username, 
             userId:userResponse._id, 
-           
+            comments: updatedVideo.comments,
+            _Id: updatedVideo._id
               
         };
         res.send(videoData); // Send only the selected user data
@@ -125,12 +130,7 @@ const deleteVideo = async (req, res) => {
         if (!video) {
             return res.status(404).json({ message: "Video not found" });
         }
-        if (video.createdBy.toString() !== req.user.id) {
-            return res.status(403).json({ message: "Unauthorized to delete this video" });
-        }
-
-        const deletedVideo = await videoService.deleteVideo(id, pid);
-        console.log(deleteVideo);
+        await videoService.deleteVideo(id, pid);
         res.json({ message: 'Video successfully deleted', videoId: pid });
     } catch (error) {
         console.error('Failed to delete video:', error.message);
@@ -172,7 +172,9 @@ const likeAction = async (req, res) => {
             imageUrl: videoResponse.imageUrl,
             videoUrl: videoResponse.videoUrl,
             userId:videoResponse.createdBy,    
-            createdBy: userResponse.username,    
+            createdBy: userResponse.username,
+            comments: videoResponse.comments ,
+            _Id: videoResponse._id   
         };
         res.send(updatedVideo); // Send only the selected user data
        

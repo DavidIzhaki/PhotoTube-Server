@@ -11,15 +11,17 @@ const commentSchema = new Schema({
         ref: 'User',
         required: true
     },
-    videoID: {
+    videoId: {
         type: Schema.Types.ObjectId,
         ref: 'Video',
         required: true
     },
-    createdAt: {
+    date: {
         type: Date,
         default: Date.now
     }
-}, { timestamps: true });
+});
 
-export default { commentSchema };
+const Comment = mongoose.model('Comment', commentSchema);
+
+export default Comment;

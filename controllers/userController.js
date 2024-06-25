@@ -1,7 +1,7 @@
 import userService from '../services/userService.js';
 import tokenService from '../services/tokenService.js';
 import videoService from '../services/videoService.js';
-
+import commentService from '../services/commentService.js'
 
 // 201 Created: The request has succeeded and a new resource has been created as a result.
 // 400 Bad Request: The server could not understand the request due to invalid syntax.
@@ -13,7 +13,7 @@ import videoService from '../services/videoService.js';
 const createUser = async (req, res) => {
     try {
         const { username, password, gender, displayname, profileImg } = req.body;
-        const user = await userService.createUser(username, password,gender, displayname, profileImg);
+        const user = await userService.createUser(username, password,displayname,gender , profileImg);
         if(user){
             res.status(201).json({ message: 'User created successfully'});
         }
@@ -145,7 +145,8 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     try {
         const userId = req.user.id; 
-
+           // Delete all comments associated with the video
+           await commentService.deleteCommentsByUserId(userId);
        await videoService.deleteVideosByUserId(userId); 
         const deletedUser = await userService.deleteUser(userId);
 
@@ -159,6 +160,7 @@ const deleteUser = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
 
 
 async function login(req, res) {

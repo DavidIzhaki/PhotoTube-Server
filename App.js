@@ -2,6 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import userRouter from './routes/userRoutes.js'
 import videoRouter from './routes/videoRoutes.js'
+import commentRouter from './routes/commentRoutes.js'
 // import commentRouter from './routes/commentRoutes.js'
 import mongoose from 'mongoose'
 import customEnv from 'custom-env'
@@ -31,7 +32,7 @@ server.use(express.json({limit: '100mb'}));
 server.use('/api/users', userRouter);
 server.use('/api/users', videoRouter);
 server.use('/api/videos', videoRouter);
-// server.use('/api/users', commentRouter);
+server.use('/api/users', commentRouter);
 
 server.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
