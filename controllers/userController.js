@@ -35,7 +35,6 @@ const getUser = async (req, res) => {
             return res.status(404).send({ message: "User not found" });
         }
 
-
         const UserData = {
             displayname: user.displayname,
             profileImg: user.profileImg,

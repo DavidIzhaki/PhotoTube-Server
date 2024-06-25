@@ -1,4 +1,5 @@
 import User from '../models/userSchema.js'
+import mongoose from 'mongoose';
 
 
 
@@ -29,6 +30,7 @@ const getUser = async (id) => {
         throw error;
     }
 }
+
 
 const deleteUser = async (userId) => {
     const result = await User.findByIdAndDelete(userId);

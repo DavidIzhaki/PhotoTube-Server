@@ -20,7 +20,7 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  profileImg: {
+  c: {
     type: String,
     required: true
   },
@@ -29,7 +29,7 @@ const userSchema = new Schema({
     ref: 'Video'
   }],
 
-}, );
+},  { collection: 'users' });
 
 const User = mongoose.model('User', userSchema);
 

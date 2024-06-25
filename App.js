@@ -19,6 +19,7 @@ console.log(`Environment: ${process.env.NODE_ENV}`);
 mongoose.connect(process.env.CONNECTION_STRING).then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Could not connect to MongoDB:', err));
 
+  
 const server = express()
 console.log('Server initialized.');
 server.use(cors());

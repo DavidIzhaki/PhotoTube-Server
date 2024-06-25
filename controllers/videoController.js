@@ -1,6 +1,7 @@
 // controllers/videoController.js
 import videoService from '../services/videoService.js'
 import userService from '../services/userService.js';
+import User from '../models/userSchema.js'
 
 //Gets all the videos
 const getVideos = async (req, res) => {
@@ -12,7 +13,9 @@ const getVideos = async (req, res) => {
 
          // Create a map of userId to username for quick lookup
          const userMap = users.reduce((map, user) => {
+
              map[user._id.toString()] = { username: user.displayname, userProfileImg: user.profileImg };  // Ensure correct key type
+
              return map;
          }, {});
  
@@ -37,6 +40,7 @@ const getVideos = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 //Gets one video by UserId
@@ -71,7 +75,21 @@ const getUserVideos = async (req, res) => {
     try {
         const userId = req.params.id;
         const videos = await videoService.getVideosByUserId(userId);
-        res.json(videos);
+         const userResponse = await userService.getUser(userId);
+         const modifiedVideos = videos.map(video => ({
+            _id:video._id,
+            title: video.title,
+            views: video.views,
+            likes: video.likes, 
+            imageUrl: video.imageUrl,
+            videoUrl: video.videoUrl,
+            userId: video.createdBy, 
+            createdBy: userResponse.displayname, 
+            userProfileImg: userResponse.profileImg,
+            date: new Date(video.date).toISOString() ,
+            comments: video.comments
+        })); 
+        res.json(modifiedVideos);
     } catch (error) {
         console.error('Failed to fetch videos for user:', error);
         res.status(500).json({ message: 'Server error', error });
