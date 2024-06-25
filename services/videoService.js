@@ -1,5 +1,6 @@
 // services/videoService.js
 import Video from '../models/videoSchema.js'
+import commentService from './commentService.js';
 import userService from './userService.js';
 
 const fetchAllVideos = async () => {
@@ -44,7 +45,6 @@ const likeAction = async (videoId, userId,action) => {
     }
 
     await video.save();
-    return video;
     return video;
   };
 
@@ -106,6 +106,8 @@ const updateVideo = async (userId, videoId, updateData) => {
 
 const deleteVideo = async (userId, videoId) => {
     try {
+        // Delete all comments associated with the video
+        await commentService.deleteCommentsByVideoId(videoId);
         const video = await Video.findOneAndDelete({ _id: videoId, createdBy: userId });
         // Update the user's videoList to remove the deleted video
         const user = await userService.updateUser(userId, { $pull: { videoList: videoId } });

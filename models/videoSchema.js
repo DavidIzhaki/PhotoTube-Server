@@ -23,7 +23,8 @@ const videoSchema = new Schema({
   date: { type: Date, default: Date.now },
   imageUrl: { type: String, required: true },
   videoUrl: { type: String, required: true },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
 });
 
 const Video = mongoose.model('Video', videoSchema);
