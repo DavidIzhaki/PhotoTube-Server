@@ -127,9 +127,7 @@ const updateUser = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
        
-        console.log( updatedUser.displayname)
-        console.log( updatedUser.password)
-        console.log( updatedUser.videoList)
+      
         res.status(201).json({
             message: "User updated successfully",
             user: {
@@ -148,10 +146,7 @@ const deleteUser = async (req, res) => {
     try {
         const userId = req.user.id; 
 
-       /* not forget to add delete for all the videos the user have !
-
-
-       */
+       await videoService.deleteVideosByUserId(userId); 
         const deletedUser = await userService.deleteUser(userId);
 
         if (!deletedUser) {
@@ -184,6 +179,7 @@ export default {
           login,
           updateUser,
           isLoggedIn,
+          getInfoUser,
           deleteUser,
         };
 
