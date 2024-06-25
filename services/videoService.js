@@ -7,10 +7,16 @@ const fetchAllVideos = async () => {
     try {
         // Fetch top 10 most viewed videos
         const topViewedVideos = await Video.find().sort({ views: -1 }).limit(10);
-        // Fetch additional videos excluding the top viewed ones
-        const additionalVideos = await Video.find({
-            _id: { $nin: topViewedVideos.map(video => video._id) }
-        });
+        // Get IDs of top viewed videos
+        const topViewedIds = topViewedVideos.map(video => video._id);
+
+        let additionalVideos = [];
+        if (topViewedVideos.length >= 10) {
+            // Fetch additional videos excluding the top viewed ones if there are 10 or more top viewed videos
+            additionalVideos = await Video.find({
+                _id: { $nin: topViewedIds }
+            });
+        }
 
         // Combine the video arrays
         return topViewedVideos.concat(additionalVideos);
@@ -19,6 +25,7 @@ const fetchAllVideos = async () => {
         throw new Error('Failed to fetch videos');
     }
 };
+
 const getVideosByUserId = async (userId) => {
     try {
         return await Video.find({ createdBy: userId });

@@ -20,16 +20,16 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  profileImg: {
+  c: {
     type: String,
     required: true
   },
    videoList: [{
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'Video'
   }],
 
-}, );
+},  { collection: 'users' });
 
 const User = mongoose.model('User', userSchema);
 
