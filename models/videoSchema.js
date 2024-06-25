@@ -21,7 +21,6 @@ const videoSchema = new Schema({
   views: { type: Number, default: 0 },
   likes: [likeSchema], // Use the like sub-schema
   date: { type: Date, default: Date.now },
-  imageUrl: { type: String, required: true },
   videoUrl: { type: String, required: true },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
