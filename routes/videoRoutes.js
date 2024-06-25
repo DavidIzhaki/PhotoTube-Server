@@ -4,6 +4,8 @@ import express from 'express'
 
 const router = express.Router();
 
+
+
 router.get('/', videoController.getVideos);
 router.get('/:id/videos', videoController.getUserVideos);
 router.get('/:id/videos/:pid', videoController.getVideo);

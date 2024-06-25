@@ -1,4 +1,5 @@
 import Comment from '../models/commentSchema.js'
+import videoService from './videoService.js';
 
 const addComment = async (commentText, userId, videoId) => {
     const comment = new Comment({
@@ -12,10 +13,18 @@ const addComment = async (commentText, userId, videoId) => {
 
 
 const updateComment = async (commentId, updateData) => {
-
-    const comment = await Comment.findByIdAndUpdate(commentId, updateData, { new: true });
-    return comment;
+    try {
+        const comment = await Comment.findByIdAndUpdate(commentId, updateData, { new: true });
+        if (!comment) {
+            throw new Error('Comment not found');
+        }
+        return comment;
+    } catch (error) {
+        console.error('Error updating comment:', error);
+        throw error;
+    }
 };
+
 
 const getComment = async (commentId) => {
     try {
@@ -52,8 +61,14 @@ const deleteCommentsByUserId = async (userId) => {
     }
 };
 
+const getComments = async (videoId) => {
 
-
+    try {
+        return  await Comment.find({ videoId });
+    } catch (error) {
+        throw new Error('Database query failed');
+    }
+};
 
 
 
@@ -67,5 +82,6 @@ export default {
     deleteCommentsByUserId,
     deleteComment,
     updateComment,
-    getComment
+    getComment,
+    getComments
 };

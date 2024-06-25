@@ -12,7 +12,7 @@ const getVideos = async (req, res) => {
 
          // Create a map of userId to username for quick lookup
          const userMap = users.reduce((map, user) => {
-             map[user._id.toString()] = user.username; // Ensure correct key type
+             map[user._id.toString()] = { username: user.displayname, userProfileImg: user.profileImg };  // Ensure correct key type
              return map;
          }, {});
  
@@ -22,13 +22,13 @@ const getVideos = async (req, res) => {
              title: video.title,
              views: video.views,
              likes: video.likes, 
-             imageUrl: video.imageUrl,
              videoUrl: video.videoUrl,
+             creatorImg:  userMap[video.createdBy.toString()].userProfileImg,
              userId: video.createdBy, 
-             createdBy: userMap[video.createdBy.toString()], 
+             createdBy: userMap[video.createdBy.toString()].username, 
              date: new Date(video.date).toISOString() ,
              comments: video.comments,
-             _Id: video._id
+             
          }));
          
          res.json(modifiedVideos);
@@ -51,12 +51,12 @@ const getVideo = async (req, res) => {
             views: videoResponse.views,
             likes: videoResponse.likes,
             date: videoResponse.date,
-            imageUrl: videoResponse.imageUrl,
             videoUrl: videoResponse.videoUrl,
+            creatorImg: userResponse.profileImg,
             createdBy: userResponse.username, 
             userId:userResponse._id, 
             comments: videoResponse.comments,
-            _Id: videoResponse._id
+            _id: videoResponse._id
         };
         
         res.send(videoData); // Send only the selected user data
@@ -100,12 +100,12 @@ const updateVideo = async (req, res) => {
             views: updatedVideo.views,
             likes: updatedVideo.likes,
             date: updatedVideo.date,
-            imageUrl: updatedVideo.imageUrl,
+            creatorImg: userResponse.profileImg,
             videoUrl: updatedVideo.videoUrl,
             createdBy: userResponse.username, 
             userId:userResponse._id, 
             comments: updatedVideo.comments,
-            _Id: updatedVideo._id
+            _id: updatedVideo._id
               
         };
         res.send(videoData); // Send only the selected user data
@@ -169,12 +169,12 @@ const likeAction = async (req, res) => {
             views: videoResponse.views,
             likes: videoResponse.likes,
             date: videoResponse.date,
-            imageUrl: videoResponse.imageUrl,
+            creatorImg: userResponse.profileImg,
             videoUrl: videoResponse.videoUrl,
             userId:videoResponse.createdBy,    
             createdBy: userResponse.username,
             comments: videoResponse.comments ,
-            _Id: videoResponse._id   
+            _id: videoResponse._id   
         };
         res.send(updatedVideo); // Send only the selected user data
        
@@ -189,4 +189,14 @@ const likeAction = async (req, res) => {
 
 
 
-export default { getVideos, updateVideo, deleteVideo, createVideo, getVideo, getUserVideos,likeAction }
+
+
+export default { 
+    getVideos,
+    updateVideo,
+    deleteVideo,
+    createVideo,
+    getVideo,
+    getUserVideos,
+    likeAction,
+}
