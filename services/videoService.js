@@ -37,8 +37,13 @@ const likeAction = async (videoId, userId,action) => {
     const likeIndex = video.likes.findIndex(like => like.userId.toString() === userId);
 
     if (likeIndex !== -1) {
-        // Update the existing like/dislike action
-        video.likes[likeIndex].action = action;
+        if (video.likes[likeIndex].action === action) {
+            // Remove the like/dislike if the action is the same
+            video.likes.splice(likeIndex, 1);
+        } else {
+            // Update the existing like/dislike action if the action is different
+            video.likes[likeIndex].action = action;
+        }
     } else {
         // Add a new like/dislike action
         video.likes.push({ userId, action });
@@ -138,6 +143,20 @@ const addVideo = async (videoData) => {
     await video.save();
     return video;
 };
+const addCommentToVideo = async (videoId, commentId) => {
+    await Video.findByIdAndUpdate(videoId, { $push: { comments: commentId } });
+};
+const deleteCommentFromVideo = async (videoId, commentId) => {
+    console.log(videoId);
+    console.log(commentId)
+    const video = await Video.findByIdAndUpdate(
+        videoId,
+        { $pull: { comments: commentId } },
+        { new: true }
+    );
+    console.log(video.comments)
+    return video;
+};
 
 
 export default {
@@ -150,5 +169,7 @@ export default {
     isLiked,
     isDisliked,
     likeAction,
-    deleteVideosByUserId
+    deleteVideosByUserId,
+    addCommentToVideo,
+    deleteCommentFromVideo
 };

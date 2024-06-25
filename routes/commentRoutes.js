@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/:id/videos/:pid/comments', userController.isLoggedIn, commentController.createComment);
 router.delete('/:id/comments', userController.isLoggedIn, commentController.deleteComment);
 router.patch('/:id/comments', userController.isLoggedIn, commentController.editComment);
+router.get('/:pid/comments', commentController.getCommentsByVideoId);
 
 
 export default router
