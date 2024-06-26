@@ -20,7 +20,7 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  c: {
+  profileImg: {
     type: String,
     required: true
   },

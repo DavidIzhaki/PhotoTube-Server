@@ -1,5 +1,4 @@
 import Comment from '../models/commentSchema.js'
-import videoService from './videoService.js';
 
 const addComment = async (commentText, userId, videoId) => {
     const comment = new Comment({
@@ -51,9 +50,9 @@ const deleteCommentsByVideoId = async (videoId) => {
     }
 };
 
-const deleteCommentsByUserId = async (userId) => {
+const deleteCommentsByUserId = async (createdBy) => {
     try {
-        await Comment.deleteMany({ userId });
+        await Comment.deleteMany({ createdBy });
         return true;
     } catch (error) {
         console.error('Error deleting comments:', error);

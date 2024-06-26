@@ -36,7 +36,7 @@ const deleteComment = async (req, res) => {
         if (!comment) {
             return res.status(404).json({ message: "Comment not found" });
         }
-        console.log(comment)
+       
         const videoId = comment.videoId;
 
         // Delete the comment
@@ -72,7 +72,7 @@ const editComment = async (req, res) => {
         
         // Update the comment
         const updatedComment = await commentService.updateComment(id, updateData);
-        console.log(updatedComment);
+   
         res.status(200).json({ message: "Comment updated successfully", comment: updatedComment });
     } catch (error) {
         console.error('Failed to update comment:', error.message);

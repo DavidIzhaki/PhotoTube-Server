@@ -1,7 +1,6 @@
 // controllers/videoController.js
 import videoService from '../services/videoService.js'
 import userService from '../services/userService.js';
-import User from '../models/userSchema.js'
 
 //Gets all the videos
 const getVideos = async (req, res) => {
@@ -49,15 +48,17 @@ const getVideo = async (req, res) => {
     try {
         const videoResponse = await videoService.getVideo(id, pid);
         const userResponse = await userService.getUser(id);
+           // Increment the view count
+           await videoService.incrementViews(pid);
 
         const videoData = {
             title: videoResponse.title,
-            views: videoResponse.views,
+            views: videoResponse.views+1,
             likes: videoResponse.likes,
             date: videoResponse.date,
             videoUrl: videoResponse.videoUrl,
             creatorImg: userResponse.profileImg,
-            createdBy: userResponse.username, 
+            createdBy: userResponse.displayname, 
             userId:userResponse._id, 
             comments: videoResponse.comments,
             _id: videoResponse._id
@@ -85,7 +86,7 @@ const getUserVideos = async (req, res) => {
             videoUrl: video.videoUrl,
             userId: video.createdBy, 
             createdBy: userResponse.displayname, 
-            userProfileImg: userResponse.profileImg,
+            creatorImg: userResponse.profileImg,
             date: new Date(video.date).toISOString() ,
             comments: video.comments
         })); 
@@ -120,7 +121,7 @@ const updateVideo = async (req, res) => {
             date: updatedVideo.date,
             creatorImg: userResponse.profileImg,
             videoUrl: updatedVideo.videoUrl,
-            createdBy: userResponse.username, 
+            createdBy: userResponse.displayname, 
             userId:userResponse._id, 
             comments: updatedVideo.comments,
             _id: updatedVideo._id
@@ -190,7 +191,7 @@ const likeAction = async (req, res) => {
             creatorImg: userResponse.profileImg,
             videoUrl: videoResponse.videoUrl,
             userId:videoResponse.createdBy,    
-            createdBy: userResponse.username,
+            createdBy: userResponse.displayname,
             comments: videoResponse.comments ,
             _id: videoResponse._id   
         };

@@ -25,8 +25,8 @@ console.log('Server initialized.');
 server.use(cors());
 server.use(express.static(path.join(__dirname, 'public')));
 
-server.use(bodyParser.urlencoded({ limit: '100mb', extended: true }))
-server.use(express.json({limit: '100mb'}));
+server.use(bodyParser.urlencoded({ limit: '200mb', extended: true }))
+server.use(express.json({limit: '200mb'}));
 
 
 // use routes

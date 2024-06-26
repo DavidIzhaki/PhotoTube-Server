@@ -12,8 +12,8 @@ import commentService from '../services/commentService.js'
 
 const createUser = async (req, res) => {
     try {
-        const { username, password, gender, displayname, profileImg } = req.body;
-        const user = await userService.createUser(username, password,displayname,gender , profileImg);
+        const { username, password, displayname,gender , profileImg } = req.body;
+        const user = await userService.createUser(username, password,  gender,displayname , profileImg);      
         if(user){
             res.status(201).json({ message: 'User created successfully'});
         }
@@ -112,7 +112,7 @@ const updateUser = async (req, res) => {
     try {
         const userId = req.user.id; 
         const { displayname,password, gender, profileImg } = req.body;
-       console.log(gender)
+     
         // Prepare the update object based on provided data
         const updateData = {};
         if (displayname) updateData.displayname = displayname;
@@ -145,8 +145,8 @@ const deleteUser = async (req, res) => {
     try {
         const userId = req.user.id; 
            // Delete all comments associated with the video
-           await commentService.deleteCommentsByUserId(userId);
-       await videoService.deleteVideosByUserId(userId); 
+        await commentService.deleteCommentsByUserId(userId);
+        await videoService.deleteVideosByUserId(userId); 
         const deletedUser = await userService.deleteUser(userId);
 
         if (!deletedUser) {
