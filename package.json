@@ -6,11 +6,13 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env NODE_ENV=local node app.js"
+    "start": "cross-env NODE_ENV=local node app.js",
+    "fake": "cross-env NODE_ENV=local node generateFakeData.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "custom-env": "^2.0.2",
