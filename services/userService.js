@@ -3,14 +3,14 @@ import mongoose from 'mongoose';
 
 
 
-const createUser = async (username, password, gender,displayname, profileImg) => {
+const createUser = async (username, password,displayname,email, gender, profileImg) => {
 
     const existingUser = await User.findOne({ username: username });
     if (existingUser) {
         throw new Error('Username already taken');
     }
   
-    const user = new User({ username, password, displayname, gender, profileImg });
+    const user = new User({ username, password, displayname,email ,gender, profileImg });
     await user.save();
     return user;
 };

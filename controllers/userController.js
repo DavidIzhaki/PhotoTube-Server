@@ -12,8 +12,8 @@ import commentService from '../services/commentService.js'
 
 const createUser = async (req, res) => {
     try {
-        const { username, password, displayname,gender , profileImg } = req.body;
-        const user = await userService.createUser(username, password,  gender,displayname , profileImg);      
+        const { username,password,displayname,email,gender , profileImg } = req.body;
+        const user = await userService.createUser(username,password,displayname,email,gender , profileImg);      
         if(user){
             res.status(201).json({ message: 'User created successfully'});
         }
@@ -62,6 +62,7 @@ const getInfoUser = async (req, res) => {
             username: user.username,
             password: user.password,
             displayname: user.displayname,
+            email: user.email,
             gender: user.gender,
             profileImg: user.profileImg,      
         };
@@ -111,12 +112,13 @@ function isLoggedIn(req, res, next) {
 const updateUser = async (req, res) => {
     try {
         const userId = req.user.id; 
-        const { displayname,password, gender, profileImg } = req.body;
+        const { email,displayname,password, gender, profileImg } = req.body;
      
         // Prepare the update object based on provided data
         const updateData = {};
-        if (displayname) updateData.displayname = displayname;
         if (password) updateData.password = password;
+        if (displayname) updateData.displayname = displayname;
+        if (email) updateData.email = email;
         if (gender) updateData.gender = gender;
         if (profileImg) updateData.profileImg = profileImg;
         
