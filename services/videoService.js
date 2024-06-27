@@ -154,15 +154,23 @@ const addCommentToVideo = async (videoId, commentId) => {
     await Video.findByIdAndUpdate(videoId, { $push: { comments: commentId } });
 };
 const deleteCommentFromVideo = async (videoId, commentId) => {
-    console.log(videoId);
-    console.log(commentId)
+
     const video = await Video.findByIdAndUpdate(
         videoId,
         { $pull: { comments: commentId } },
         { new: true }
     );
-    console.log(video.comments)
+
     return video;
+};
+
+const incrementViews = async (videoId) => {
+    try {
+        await Video.findByIdAndUpdate(videoId, { $inc: { views: 1 } });
+    } catch (error) {
+        console.error('Failed to increment views:', error.message);
+        throw error;
+    }
 };
 
 
@@ -178,5 +186,6 @@ export default {
     likeAction,
     deleteVideosByUserId,
     addCommentToVideo,
-    deleteCommentFromVideo
+    deleteCommentFromVideo,
+    incrementViews
 };
