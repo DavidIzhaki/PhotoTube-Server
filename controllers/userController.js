@@ -3,6 +3,11 @@ import tokenService from '../services/tokenService.js';
 import videoService from '../services/videoService.js';
 import commentService from '../services/commentService.js'
 
+import customEnv from 'custom-env'
+
+customEnv.env(process.env.NODE_ENV, './config')
+const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 1324}`;
+
 // 201 Created: The request has succeeded and a new resource has been created as a result.
 // 400 Bad Request: The server could not understand the request due to invalid syntax.
 // 404 Not Found: The server can not find the requested resource.
@@ -12,7 +17,8 @@ import commentService from '../services/commentService.js'
 
 const createUser = async (req, res) => {
     try {
-        const { username,password,displayname,email,gender , profileImg } = req.body;
+        const { username,password,displayname,email,gender } = req.body;
+        const profileImg = req.file ? `/uploads/${req.file.filename}` : null;
         const user = await userService.createUser(username,password,displayname,email,gender , profileImg);      
         if(user){
             res.status(201).json({ message: 'User created successfully'});
@@ -37,7 +43,7 @@ const getUser = async (req, res) => {
 
         const UserData = {
             displayname: user.displayname,
-            profileImg: user.profileImg,
+            profileImg: `${BASE_URL}${user.profileImg}`,
             videoList: user.videoList,
         };
 
@@ -64,7 +70,7 @@ const getInfoUser = async (req, res) => {
             displayname: user.displayname,
             email: user.email,
             gender: user.gender,
-            profileImg: user.profileImg,      
+            profileImg: `${BASE_URL}${user.profileImg}`,      
         };
 
         res.send(UserData); // Send only the selected user data
@@ -112,18 +118,18 @@ function isLoggedIn(req, res, next) {
 const updateUser = async (req, res) => {
     try {
         const userId = req.user.id; 
-        const { email,displayname,password, gender, profileImg } = req.body;
-     
+        const { email,displayname,password, gender } = req.body;
+        const profileImg = req.file.filename;
         // Prepare the update object based on provided data
         const updateData = {};
         if (password) updateData.password = password;
         if (displayname) updateData.displayname = displayname;
         if (email) updateData.email = email;
         if (gender) updateData.gender = gender;
-        if (profileImg) updateData.profileImg = profileImg;
+        if (profileImg) updateData.profileImg = `/uploads/${profileImg}`;
         
         const updatedUser = await userService.updateUser(userId, updateData);
-
+        console.log(updatedUser.profileImg)
         if (!updatedUser) {
             return res.status(404).json({ message: "User not found" });
         }

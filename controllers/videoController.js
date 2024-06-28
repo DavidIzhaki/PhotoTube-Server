@@ -1,7 +1,10 @@
 // controllers/videoController.js
 import videoService from '../services/videoService.js'
 import userService from '../services/userService.js';
+import customEnv from 'custom-env'
 
+customEnv.env(process.env.NODE_ENV, './config')
+const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 1324}`;
 //Gets all the videos
 const getVideos = async (req, res) => {
     try {
@@ -24,8 +27,8 @@ const getVideos = async (req, res) => {
              title: video.title,
              views: video.views,
              likes: video.likes, 
-             videoUrl: video.videoUrl,
-             creatorImg:  userMap[video.createdBy.toString()].userProfileImg,
+             videoUrl: `${BASE_URL}${video.videoUrl}`,
+             creatorImg:  `${BASE_URL}${userMap[video.createdBy.toString()].userProfileImg}` ,
              userId: video.createdBy, 
              createdBy: userMap[video.createdBy.toString()].username, 
              date: new Date(video.date).toISOString() ,
@@ -56,7 +59,7 @@ const getVideo = async (req, res) => {
             views: videoResponse.views+1,
             likes: videoResponse.likes,
             date: videoResponse.date,
-            videoUrl: videoResponse.videoUrl,
+            videoUrl: `${BASE_URL}${videoResponse.videoUrl}`,
             creatorImg: userResponse.profileImg,
             createdBy: userResponse.displayname, 
             userId:userResponse._id, 
@@ -83,7 +86,7 @@ const getUserVideos = async (req, res) => {
             views: video.views,
             likes: video.likes, 
             imageUrl: video.imageUrl,
-            videoUrl: video.videoUrl,
+            videoUrl: `${BASE_URL}${video.videoUrl}`,
             userId: video.createdBy, 
             createdBy: userResponse.displayname, 
             creatorImg: userResponse.profileImg,
@@ -97,10 +100,9 @@ const getUserVideos = async (req, res) => {
     }
 };
 
-//Update Video by UserId
+
 const updateVideo = async (req, res) => {
     const { id, pid } = req.params;  // id is userId, pid is videoId
-    const updateData = req.body;  // Data to update the video with
 
     try {
         // First, verify that the video belongs to the user making the request
@@ -111,7 +113,16 @@ const updateVideo = async (req, res) => {
         if (video.createdBy.toString() !== req.user.id) {
             return res.status(403).json({ message: "Unauthorized to update this video" });
         }
-    
+
+        // Prepare the update data
+        const updateData = {};
+        if (req.body.title) updateData.title = req.body.title;
+
+        // Handle video file upload
+        if (req.file) {
+            updateData.videoUrl = `/uploads/${req.file.filename}`;
+        }
+
         const updatedVideo = await videoService.updateVideo(id, pid, updateData);
         const userResponse = await userService.getUser(id);
         const videoData = {
@@ -120,12 +131,11 @@ const updateVideo = async (req, res) => {
             likes: updatedVideo.likes,
             date: updatedVideo.date,
             creatorImg: userResponse.profileImg,
-            videoUrl: updatedVideo.videoUrl,
-            createdBy: userResponse.displayname, 
-            userId:userResponse._id, 
+            videoUrl: `${BASE_URL}${updatedVideo.videoUrl}`,
+            createdBy: userResponse.displayname,
+            userId: userResponse._id,
             comments: updatedVideo.comments,
             _id: updatedVideo._id
-              
         };
         res.send(videoData); // Send only the selected user data
     } catch (error) {
@@ -133,6 +143,7 @@ const updateVideo = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 //Delete Video by UserId
 const deleteVideo = async (req, res) => {
@@ -158,16 +169,19 @@ const deleteVideo = async (req, res) => {
 };
 
 
-const createVideo = async (req, res) => {
+export const createVideo = async (req, res) => {
     try {
         const videoData = {
-            ...req.body,
+            title: req.body.title,
+            videoUrl: `/uploads/${req.file.filename}`, // Store the path to the video file
             createdBy: req.user.id,  // Set the creator of the video to the logged-in user
+            views: 0
         };
         
         const newVideo = await videoService.addVideo(videoData);
-         // Update the user's videoList to include the new video
-         await userService.updateUser(req.user.id, { $push: { videoList: newVideo._id } });
+        
+        // Update the user's videoList to include the new video
+        await userService.updateUser(req.user.id, { $push: { videoList: newVideo._id } });
 
         res.status(201).json(newVideo);
     } catch (error) {
@@ -175,6 +189,7 @@ const createVideo = async (req, res) => {
         res.status(500).json({ message: 'Failed to create video', error: error.message });
     }
 };
+
 
 const likeAction = async (req, res) => {
     try {      
@@ -189,7 +204,7 @@ const likeAction = async (req, res) => {
             likes: videoResponse.likes,
             date: videoResponse.date,
             creatorImg: userResponse.profileImg,
-            videoUrl: videoResponse.videoUrl,
+            videoUrl: `${BASE_URL}${videoResponse.videoUrl}`,
             userId:videoResponse.createdBy,    
             createdBy: userResponse.displayname,
             comments: videoResponse.comments ,
