@@ -41,8 +41,9 @@ async function createFakeUsers() {
             username: faker.internet.userName(),
             password: faker.internet.password(),
             displayname: faker.person.fullName(),
+            email: faker.person.fullName(),
             gender: faker.helpers.arrayElement(['male', 'female']),
-            profileImg: faker.image.avatar(),
+            profileImg: `/fakeData/images/v${i+1}.jpeg`,
         });
     }
     const createdUsers = await User.insertMany(users);
@@ -51,20 +52,13 @@ async function createFakeUsers() {
 
 async function createFakeVideos(users) {
     const videos = [];
-    for (let i = 1; i <= 9; i++) {
-        const videoPath = path.join(__dirname, 'Videos', `v${i}.txt`);
-        const content = fs.readFileSync(videoPath, 'utf8');
-
-        // Ensure content does not exceed MongoDB's BSON document size limit
-        if (Buffer.byteLength(content, 'utf8') > 16 * 1024 * 1024) {
-            console.error(`Content of ${videoPath} exceeds MongoDB's BSON document size limit.`);
-            continue;
-        }
-
+    for (let i = 1; i <= 10; i++) {
+     
+    
         const user = users[faker.number.int({ min: 0, max: users.length - 1 })];
         const video = new Video({
             title: faker.lorem.words(3),
-            videoUrl: content,
+            videoUrl: `/fakeData/videos/v${i}.mp4`,
             createdBy: user._id,
             likes: [],
             views: faker.number.int({ min: 0, max: 1000 }),
