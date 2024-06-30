@@ -1,6 +1,4 @@
 import User from '../models/userSchema.js'
-import mongoose from 'mongoose';
-
 
 
 const createUser = async (username, password,displayname,email, gender, profileImg) => {

@@ -3,8 +3,8 @@ import videoService from '../services/videoService.js'
 import userService from '../services/userService.js';
 import customEnv from 'custom-env'
 
-customEnv.env(process.env.NODE_ENV, './config')
-const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 1324}`;
+customEnv.env(process.env.NODE_ENV, './config');
+
 //Gets all the videos
 const getVideos = async (req, res) => {
     try {
@@ -27,8 +27,8 @@ const getVideos = async (req, res) => {
              title: video.title,
              views: video.views,
              likes: video.likes, 
-             videoUrl: `${BASE_URL}${video.videoUrl}`,
-             creatorImg:  `${BASE_URL}${userMap[video.createdBy.toString()].userProfileImg}` ,
+             videoUrl: `${process.env.PORT}${video.videoUrl}`,
+             creatorImg:`${process.env.PORT}${userMap[video.createdBy.toString()].userProfileImg}`   ,
              userId: video.createdBy, 
              createdBy: userMap[video.createdBy.toString()].username, 
              date: new Date(video.date).toISOString() ,
@@ -59,8 +59,8 @@ const getVideo = async (req, res) => {
             views: videoResponse.views+1,
             likes: videoResponse.likes,
             date: videoResponse.date,
-            videoUrl: `${BASE_URL}${videoResponse.videoUrl}`,
-            creatorImg: userResponse.profileImg,
+            videoUrl: `${process.env.PORT}${videoResponse.videoUrl}`,
+            creatorImg: `${process.env.PORT}${userResponse.profileImg}`,
             createdBy: userResponse.displayname, 
             userId:userResponse._id, 
             comments: videoResponse.comments,
@@ -85,11 +85,10 @@ const getUserVideos = async (req, res) => {
             title: video.title,
             views: video.views,
             likes: video.likes, 
-            imageUrl: video.imageUrl,
-            videoUrl: `${BASE_URL}${video.videoUrl}`,
+            videoUrl:`${process.env.PORT}${video.videoUrl}`,
             userId: video.createdBy, 
             createdBy: userResponse.displayname, 
-            creatorImg: userResponse.profileImg,
+            creatorImg: `${process.env.PORT}${userResponse.profileImg}`,
             date: new Date(video.date).toISOString() ,
             comments: video.comments
         })); 
@@ -130,13 +129,14 @@ const updateVideo = async (req, res) => {
             views: updatedVideo.views,
             likes: updatedVideo.likes,
             date: updatedVideo.date,
-            creatorImg: userResponse.profileImg,
-            videoUrl: `${BASE_URL}${updatedVideo.videoUrl}`,
+            creatorImg: `${process.env.PORT}${userResponse.profileImg}`,
+            videoUrl:`${process.env.PORT}${updatedVideo.videoUrl}`,
             createdBy: userResponse.displayname,
             userId: userResponse._id,
             comments: updatedVideo.comments,
             _id: updatedVideo._id
         };
+        
         res.send(videoData); // Send only the selected user data
     } catch (error) {
         console.error('Failed to update video:', error.message);
@@ -203,8 +203,8 @@ const likeAction = async (req, res) => {
             views: videoResponse.views,
             likes: videoResponse.likes,
             date: videoResponse.date,
-            creatorImg: userResponse.profileImg,
-            videoUrl: `${BASE_URL}${videoResponse.videoUrl}`,
+            creatorImg: `${process.env.PORT}${userResponse.profileImg}`,
+            videoUrl: `${process.env.PORT}${videoResponse.videoUrl}`,
             userId:videoResponse.createdBy,    
             createdBy: userResponse.displayname,
             comments: videoResponse.comments ,
