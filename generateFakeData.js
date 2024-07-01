@@ -36,14 +36,14 @@ async function clearData() {
 
 async function createFakeUsers() {
     const users = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 1; i <= 10; i++) {
         users.push({
             username: faker.internet.userName(),
             password: faker.internet.password(),
             displayname: faker.person.fullName(),
             email: faker.person.fullName(),
             gender: faker.helpers.arrayElement(['male', 'female']),
-            profileImg: `/fakeData/images/v${i+1}.jpeg`,
+            profileImg: `/fakeData/images/v${i}.jpeg`,
         });
     }
     const createdUsers = await User.insertMany(users);
@@ -52,9 +52,7 @@ async function createFakeUsers() {
 
 async function createFakeVideos(users) {
     const videos = [];
-    for (let i = 1; i <= 10; i++) {
-     
-    
+    for (let i = 1; i <= 30; i++) {
         const user = users[faker.number.int({ min: 0, max: users.length - 1 })];
         const video = new Video({
             title: faker.lorem.words(3),
@@ -68,13 +66,14 @@ async function createFakeVideos(users) {
         user.videoList.push(video._id);
         await user.save();
         videos.push(video);
+       
     }
     return videos;
 }
 
 async function createFakeComments(users, videos) {
     const comments = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 80; i++) {
         const user = users[faker.number.int({ min: 0, max: users.length - 1 })];
         const video = videos[faker.number.int({ min: 0, max: videos.length - 1 })];
         const comment = new Comment({
