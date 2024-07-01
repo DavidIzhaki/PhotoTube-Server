@@ -26,6 +26,10 @@ const createUser = async (req, res) => {
         if (error.message === 'Username already taken') {
             return res.status(400).json({ message: error.message });
         }
+        if(error.message === 'Email already taken')
+            {
+                return res.status(400).json({ message: error.message });
+            }
         console.error('Error creating user:', error);
         res.status(500).json({ message: 'Error creating user' });
     }
@@ -139,6 +143,11 @@ const updateUser = async (req, res) => {
             }
         });
     } catch (error) {
+
+        if(error.message === 'Email already taken')
+            {
+                return res.status(400).json({ message: error.message });
+            }
         console.error("Error updating user:", error);
         res.status(500).json({ message: "Internal server error" });
     }
@@ -158,6 +167,11 @@ const deleteUser = async (req, res) => {
 
         res.status(200).json({ message: "User deleted successfully" });
     } catch (error) {
+
+        if(error.message === 'Email already taken')
+            {
+                return res.status(400).json({ message: error.message });
+            }
         console.error("Error deleting user:", error);
         res.status(500).json({ message: "Internal server error" });
     }
