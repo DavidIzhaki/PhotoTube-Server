@@ -14,6 +14,7 @@ const storage = multer.diskStorage({
   });
   
   const upload = multer({ storage: storage });
+
 router.get('/isExist', userController.isExist)
 router.post('/',upload.single('profileImg'), userController.createUser)
 router.post('/login', userController.login)
