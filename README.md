@@ -35,22 +35,32 @@ npm install
 ```
 
 
-
-### Configuration
-
 Create a `.env` file in the root directory of your project and include the following settings to configure your environment:
 
 ```bash
-# MongoDB Connection URI
+# MongoDB Connection URI -  You can choose another legal path to connect to MongoDB
 CONNECTION_STRING="mongodb://127.0.0.1:27017/PhotoTubeDB"
 
-# Port number for the server
+# Port number for the server - You can choose another legal port
 PORT=1324
 
 # Base URL configuration
 BASE_URL=http://localhost:${PORT}
 ```
 
+Replace 1324 and mongodb://127.0.0.1:27017/PhotoTubeDB with the port number and CONNECTION_STRING you desire. This customization enhances flexibility within your development environment.
+
+### Configuration
+
+To streamline the process of starting the server and generating fake data, add the following scripts to your `package.json`:
+
+```bash
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=local node app.js",
+    "fake": "cross-env NODE_ENV=local node generateFakeData.js"
+}
+```
 
 ### Running the Server
 
@@ -91,6 +101,18 @@ To execute this script and populate your database with fake data, please follow 
    ```bash
    npm run fake
    ```
+
+### Public Directory Setup
+
+Our server utilizes a public directory to serve static files, differing from the build folder typically used in frontends. To generate a production build of your own, navigate to our frontend project directory in this repository: https://github.com/DavidIzhaki/PhotoTube-Web.git
+
+ and run:
+
+```bash
+npm run build
+```
+
+This command prepares your frontend for production by compiling all resources into the build directory.
 
 
 ## API Endpoints Overview
