@@ -35,7 +35,7 @@ npm install
 ```
 
 
-Create a `.env.local` file in config directory inside the root directory of your project and include the following settings to configure your environment:
+There is a `.env.local` file in config directory inside the root directory of your project and include the following settings to configure your environment:
 
 ```bash
 # MongoDB Connection URI -  You can choose another legal path to connect to MongoDB
