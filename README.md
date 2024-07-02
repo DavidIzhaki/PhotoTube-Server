@@ -27,8 +27,8 @@ The server is crafted to work seamlessly with a React frontend, facilitating SPA
 ### Installation
 
 Clone the repository and install the dependencies:
-git clone https://github.com/DavidIzhaki/Phottubee-Server.git
-cd PhotoTube_Server
+git clone https://github.com/DavidIzhaki/PhotoTube-Server.git
+cd PhotoTube-Server
 npm install
 
 
