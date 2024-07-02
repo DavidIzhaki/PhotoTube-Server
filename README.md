@@ -118,6 +118,8 @@ This command prepares your frontend for production by compiling all resources in
 ## API Endpoints Overview
 
 - `/api/users` for user registration and management.
-- `/api/videos` to fetch, create, and manage videos.
+- `/api/videos` to fetch videos.
+- `/api/users/videos` to fetch, create, and manage videos.
+- `/api/users/comments` to fetch, create, and manage comments.
 
 Be sure to set up your `.env` file with the MongoDB connection string and desired port before starting the server.
