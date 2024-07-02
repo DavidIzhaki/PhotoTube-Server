@@ -32,6 +32,7 @@ Clone the repository and install the dependencies with the following commands:
 git clone https://github.com/DavidIzhaki/PhotoTube-Server.git
 cd PhotoTube-Server
 npm install
+```
 
 
 
@@ -48,18 +49,21 @@ PORT=1324
 
 # Base URL configuration
 BASE_URL=http://localhost:${PORT}
-
+```
 
 
 ### Running the Server
 
 To start the server without populating the MongoDB database with fake data:
+```bash
 npm start
+```
 
 To start the server and populate the MongoDB database with fake data:
+```bash
 npm run fake
 npm start
-
+```
 
 The `fake` script utilizes `generateFakeData.js` to seed the database with users, videos, and comments to support development and testing.
 
@@ -86,6 +90,7 @@ To execute this script and populate your database with fake data, please follow 
 
    ```bash
    npm run fake
+   ```
 
 
 ## API Endpoints Overview
