@@ -7,17 +7,38 @@ const createUser = async (username, password,displayname,email, gender, profileI
     if (existingUser) {
         throw new Error('Username already taken');
     }
+    const existingEmail = await User.findOne({ email: email });
+
+    if (existingEmail) {
+        throw new Error('Email already taken');
+    }
   
     const user = new User({ username, password, displayname,email ,gender, profileImg });
     await user.save();
     return user;
 };
-
 const updateUser = async (userId, updateData) => {
+    // Fetch the current user
+    const currentUser = await User.findById(userId);
 
+    if (!currentUser) {
+        throw new Error('User not found');
+    }
+
+    // Check if the email is being updated and it's different from the current email
+    if (updateData.email && updateData.email !== currentUser.email) {
+        const existingEmail = await User.findOne({ email: updateData.email });
+
+        if (existingEmail) {
+            throw new Error('Email already taken');
+        }
+    }
+
+    // Update the user
     const user = await User.findByIdAndUpdate(userId, updateData, { new: true });
     return user;
 };
+
 
 const getUser = async (id) => {
     try {
