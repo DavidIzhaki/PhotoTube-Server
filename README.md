@@ -1,13 +1,13 @@
 # PhotoTube Server
 
-PhotoTube Server is a backend service utilizing Node.js, Express, and MongoDB. It is specially designed to support a video-sharing platform similar to YouTube, managing user interactions, video uploads, and comments. The architecture follows the MVC (Model-View-Controller) pattern with the view component typically handled by a React frontend.
+PhotoTube Server is a backend service utilizing Node.js, Express, and MongoDB. It is specially designed to support a video-sharing platform similar to YouTube, managing user interactions, video uploads, likes and comments. The architecture follows the MVC (Model-View-Controller) pattern with the view component typically handled by a React frontend.
 
 ## Features
 
 - **User Authentication**: Implements a secure login and registration system, generating JWTs for session management.
 - **Video Management**: Allows users to upload, edit, and delete videos.
 - **Comment System**: Users can post comments on videos and manage their comments.
-- **Data Seeding for Development**: Populate the MongoDB database with fake data for testing and development.
+- **Data Populate for Development**: Populate the MongoDB database with fake data for testing and development.
 
 ## Integration with React Frontend
 
@@ -34,15 +34,23 @@ npm install
 
 ### Configuration
 
-Create a `.env` file in the root directory and set the following:
-CONNECTION_STRING = "mongodb://127.0.0.1:27017/PhotoTubeDB"
-PORT = 1324
-BASE_URL = http://localhost:${PORT}
+Create a `.env` file in the root directory of your project and include the following settings to configure your environment:
+
+```bash
+# MongoDB Connection URI
+CONNECTION_STRING="mongodb://127.0.0.1:27017/PhotoTubeDB"
+
+# Port number for the server
+PORT=1324
+
+# Base URL configuration
+BASE_URL=http://localhost:${PORT}
+
 
 
 ### Running the Server
 
-To start the server without seeding the MongoDB database with fake data:
+To start the server without populating the MongoDB database with fake data:
 npm start
 
 To start the server and populate the MongoDB database with fake data:
@@ -52,9 +60,30 @@ npm start
 
 The `fake` script utilizes `generateFakeData.js` to seed the database with users, videos, and comments to support development and testing.
 
-## Seeding the Database
+## Populating the Database with Fake Data
 
-The seeding script (`generateFakeData.js`) uses `faker` library to populate the database with fake users, videos, and comments.
+To enhance development and testing, our application includes a utility script named `generateFakeData.js`. This script uses the `faker` library to generate and populate the database with fictitious users, videos, and comments.
+
+### What Does `generateFakeData.js` Do?
+
+This script is designed to automatically create:
+- A specified number of fake users with realistic but fictional data.
+- A collection of videos associated with these users.
+- Comments on these videos to simulate user interaction.
+
+Each element (user, video, and comment) is crafted using random but coherent data, ensuring a diverse dataset for robust testing.
+
+### How to Run the Fake Data Generation Script
+
+To execute this script and populate your database with fake data, please follow these steps:
+
+1. Make sure your MongoDB service is running on your local machine or a specified server.
+2. Open a terminal and navigate to the root directory of the project where `generateFakeData.js` is located.
+3. Enter the following command:
+
+   ```bash
+   npm run fake
+
 
 ## API Endpoints Overview
 
