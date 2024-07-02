@@ -24,12 +24,15 @@ The server is crafted to work seamlessly with a React frontend, facilitating SPA
 - MongoDB
 - npm
 
-### Installation
+### Installation Instructions
 
-Clone the repository and install the dependencies:
+Clone the repository and install the dependencies with the following commands:
+
+```bash
 git clone https://github.com/DavidIzhaki/PhotoTube-Server.git
 cd PhotoTube-Server
 npm install
+
 
 
 ### Configuration
