@@ -2,6 +2,9 @@
 import videoService from '../services/videoService.js'
 import userService from '../services/userService.js';
 import customEnv from 'custom-env'
+import * as recommendationService from '../services/recommendationService.js';
+import Video from '../models/videoSchema.js'; // Adjust the path as necessary to point to where your Video model is defined
+
 
 customEnv.env(process.env.NODE_ENV, './config');
 
@@ -219,8 +222,36 @@ const likeAction = async (req, res) => {
 };
 
 
+export async function watchVideo(req, res) {
+    const { userId, videoId } = req.body;
+    try {
+        const recommendations = await recommendationService.getVideoRecommendations(userId, videoId);
+        res.json({ recommendations });
+    } catch (error) {
+        console.error('Error getting recommendations:', error);
+        res.status(500).send('Failed to get recommendations');
+    }
+}
 
 
+const getRecommendations = async (req, res) => {
+    const { userId, videoId } = req.body; // Ensure you're receiving these in the body of your POST request
+    try {
+        // Simulating fetching recommended video IDs from the TCP server
+        const recommendedVideoIds = await recommendationService.getVideoRecommendations(userId, videoId);
+
+        // Fetch detailed information for each video ID from your database
+        const videoDetails = await Video.find({
+            '_id': { $in: recommendedVideoIds }
+        });
+
+        // Respond with the detailed video data
+        res.json(videoDetails);
+    } catch (error) {
+        console.error('Error getting recommendations:', error);
+        res.status(500).send('Failed to get recommendations');
+    }
+};
 
 
 
@@ -233,4 +264,5 @@ export default {
     getVideo,
     getUserVideos,
     likeAction,
+    getRecommendations 
 }
