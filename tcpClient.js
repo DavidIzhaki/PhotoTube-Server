@@ -22,6 +22,7 @@ function sendUserActivity(userId, videoId) {
         client.connect(parseInt(TCP_SERVER_PORT, 10), TCP_SERVER_HOST, () => {
             console.log(`Connected to TCP server at ${TCP_SERVER_HOST}:${TCP_SERVER_PORT}`);
             // Send the user activity in the format "userId,videoId"
+            // Before sending to TCP server
             client.write(`${userId},${videoId}\n`);
         });
 

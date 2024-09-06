@@ -24,5 +24,7 @@ router.delete('/:id/videos/:pid', userController.isLoggedIn, videoController.del
 router.patch('/:id/videos/:pid/like', userController.isLoggedIn, videoController.likeAction);
 router.post('/:id/videos', userController.isLoggedIn, upload.single('video'), videoController.createVideo);
 
+router.post('/recommendations', userController.isLoggedIn, videoController.getRecommendations);
+
 
 export default router
