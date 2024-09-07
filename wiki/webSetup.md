@@ -1,12 +1,19 @@
 ## Web App
 
+Start the Web app by cloning from git:
+   
+   ```bash
+   git clone https://github.com/DavidIzhaki/PhotoTube-Web.git
+   cd PhotoTube-Web
+   ```
+
 Build the frontend:
 
 ```bash
 npm run build
 ```
 
-Then, copy the build folder to the public folder in the Node.js server.
+Then, copy the files in build folder into the public folder in the Node.js server.
 
 ### Start the web app:
 
