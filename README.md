@@ -46,7 +46,7 @@ TCP_SERVER_PORT=2347
 
 TCP_SERVER_HOST should point to the IP address where the TCP server is running.
 
-TCP_SERVER_PORT is set to 2347 to match the port used in the TCP server code.
+TCP_SERVER_PORT is set to 2347 to match the port used in the TCP server code, you can change it but you need to change it too in the TCP-Server, look on  [PhotoTube-TCP-Server README](https://github.com/DavidIzhaki/PhotoTube-TCP-Server) .
 
 
 ### Getting Started
