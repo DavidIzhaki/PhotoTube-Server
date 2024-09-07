@@ -235,13 +235,37 @@ export async function watchVideo(req, res) {
 
 
 const getRecommendations = async (req, res) => {
+    console.log('getRecommendationscc called');
     const { userId, videoId } = req.body; // Ensure you're receiving these in the body of your POST request
     try {
+        
         const MIN_VIDEOS = 6;
         const TOTAL_VIDEOS = 10;
-        // Simulating fetching recommended video IDs from the TCP server
-        const recommendedVideoIds = await recommendationService.getVideoRecommendations(userId, videoId);
-        // Fetch detailed information for each video ID from your database
+        
+        let timeoutId; // Declare the timeoutId so we can clear it later
+
+        // Simulating fetching recommended video IDs from the TCP server with a timeout
+        const timeoutPromise = new Promise((resolve) => {
+          timeoutId = setTimeout(() => {
+            console.log('TCP server took too long to respond. Proceeding with fallback.');
+            resolve([]);  // Return an empty array after 10 seconds to continue the logic
+          }, 1500);
+        });
+  
+      const recommendedVideoIds = await Promise.race([
+        recommendationService.getVideoRecommendations(userId, videoId),
+        timeoutPromise,
+      ]);
+  
+  
+      // If the response is empty, handle the fallback logic
+      if (!recommendedVideoIds || recommendedVideoIds.length === 0) {
+        console.log('No recommended videos returned from TCP server. Fetching random videos.');
+      }
+      else
+      {
+        clearTimeout(timeoutId);
+      }
         const videoDetails = await Video.find({
             '_id': { $in: recommendedVideoIds }
         });
@@ -317,7 +341,6 @@ const getRecommendations = async (req, res) => {
         }
         // Ensure the total number of videos is exactly 10
         modifiedVideos = modifiedVideos.slice(0, TOTAL_VIDEOS);
-
         res.json(modifiedVideos);
 
 
