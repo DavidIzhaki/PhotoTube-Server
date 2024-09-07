@@ -5,10 +5,19 @@
     Open Android Studio and ensure the necessary SDKs and AVDs (Android Virtual Devices) are installed.
    
     Start the Android Emulator to simulate an Android device.
+
+    Start the Android app by cloning the app:
+   
+    ```bash
+    git clone https://github.com/romGreen/PhotoTube_Android.git
+    cd PhotoTube-Android
+    ```
+
    
 3. **Starting the Android App**
 
-    After the emulator setup, start the Node.js server and TCP server with the help of the explanations in **wiki/envSetup.md**.
+    After the emulator setup, start the Node.js server and TCP server with the help of the explanations in 
+    **wiki/envSetup.md**.
 
    
 ### Features:
@@ -30,12 +39,17 @@
 
    ![image](https://github.com/user-attachments/assets/15f5d2fb-ffbe-4922-9a57-f9343f87eb45)
 
+4. **Side menu:**
+   
+   ![image](https://github.com/user-attachments/assets/018076c0-4357-4370-8010-a8f3d699f73c)
+   
 
-5. **Dark mode:**
+6. **Dark mode:**
 
+   ![image](https://github.com/user-attachments/assets/66cebacc-172c-4d8e-9907-fcb5b05aec8b)
 
    
-6. **User Authentication**
+7. **User Authentication**
 
     **Login:** Log in using valid credentials.
 
@@ -49,7 +63,7 @@
     ![image](https://github.com/user-attachments/assets/4e28cc83-e76f-40b1-b00e-a3d25a0f96ba)
 
 
-7. **Video Management**
+8. **Video Management**
 
     **Logged in users can handle their videos:**
 
