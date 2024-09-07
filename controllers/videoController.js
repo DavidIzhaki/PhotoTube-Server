@@ -235,49 +235,41 @@ export async function watchVideo(req, res) {
 
 
 const getRecommendations = async (req, res) => {
-    console.log('getRecommendationscc called');
-    const { userId, videoId } = req.body; // Ensure you're receiving these in the body of your POST request
+    console.log('getRecommendation called');
+    const { userId, videoId } = req.body; 
     try {
-        
         const MIN_VIDEOS = 6;
         const TOTAL_VIDEOS = 10;
         
-        let timeoutId; // Declare the timeoutId so we can clear it later
+        let timeoutId; 
 
-        // Simulating fetching recommended video IDs from the TCP server with a timeout
         const timeoutPromise = new Promise((resolve) => {
           timeoutId = setTimeout(() => {
             console.log('TCP server took too long to respond. Proceeding with fallback.');
-            resolve([]);  // Return an empty array after 10 seconds to continue the logic
+            resolve([]);  
           }, 1500);
         });
   
-      const recommendedVideoIds = await Promise.race([
-        recommendationService.getVideoRecommendations(userId, videoId),
-        timeoutPromise,
-      ]);
+        const recommendedVideoIds = await Promise.race([
+            recommendationService.getVideoRecommendations(userId, videoId),
+            timeoutPromise,
+        ]);
   
-  
-      // If the response is empty, handle the fallback logic
-      if (!recommendedVideoIds || recommendedVideoIds.length === 0) {
-        console.log('No recommended videos returned from TCP server. Fetching random videos.');
-      }
-      else
-      {
-        clearTimeout(timeoutId);
-      }
+        if (!recommendedVideoIds || recommendedVideoIds.length === 0) {
+            console.log('No recommended videos returned from TCP server. Fetching random videos.');
+        } else {
+            clearTimeout(timeoutId);
+        }
+
         const videoDetails = await Video.find({
             '_id': { $in: recommendedVideoIds }
         });
-        // Fetch all user data in parallel for better performance
+
         const userPromises = videoDetails.map(video => userService.getUser(video.createdBy));
         const users = await Promise.all(userPromises);
 
-        // Create a map of userId to username for quick lookup
         const userMap = users.reduce((map, user) => {
-
-            map[user._id.toString()] = { username: user.displayname, userProfileImg: user.profileImg };  // Ensure correct key type
-
+            map[user._id.toString()] = { username: user.displayname, userProfileImg: user.profileImg };
             return map;
         }, {});
 
@@ -292,37 +284,32 @@ const getRecommendations = async (req, res) => {
             createdBy: userMap[video.createdBy.toString()].username,
             date: new Date(video.date).toISOString(),
             comments: video.comments,
-
         }));
-        // Check if the number of videos is less than 6
+
         if (modifiedVideos.length < MIN_VIDEOS) {
-            // Fetch all available videos from videoService
             const allVideos = await videoService.fetchAllVideos();
 
-            // Filter out any videos that are already in the recommended list to avoid duplicates
-            const remainingVideos = allVideos.filter(video => !videoDetails.some(rec => rec._id === video._id));
+            const remainingVideos = allVideos.filter(video => 
+                !modifiedVideos.some(modifiedVideo => modifiedVideo._id.toString() === video._id.toString())
+            );
+            
 
-            // Shuffle the remaining videos
             function shuffle(array) {
                 return array.sort(() => 0.5 - Math.random());
             }
+
             const shuffledVideos = shuffle(remainingVideos);
 
-            // Calculate how many more videos are needed to make the total 10
             const videosNeeded = TOTAL_VIDEOS - modifiedVideos.length;
 
-            // Fetch all user data in parallel for better performance
             const userPromises2 = shuffledVideos.map(video => userService.getUser(video.createdBy));
             const users2 = await Promise.all(userPromises2);
 
-            // Create a map of userId to username for quick lookup
             const userMap2 = users2.reduce((map, user) => {
-
-                map[user._id.toString()] = { username: user.displayname, userProfileImg: user.profileImg };  // Ensure correct key type
-
+                map[user._id.toString()] = { username: user.displayname, userProfileImg: user.profileImg };
                 return map;
             }, {});
-            // Add enough videos from the shuffled videos to make the total number of videos 10
+
             const additionalVideos = shuffledVideos.slice(0, videosNeeded).map(video => ({
                 _id: video._id,
                 title: video.title,
@@ -336,19 +323,21 @@ const getRecommendations = async (req, res) => {
                 comments: video.comments,
             }));
 
-            // Combine recommended and additional videos
             modifiedVideos = [...modifiedVideos, ...additionalVideos];
         }
-        // Ensure the total number of videos is exactly 10
-        modifiedVideos = modifiedVideos.slice(0, TOTAL_VIDEOS);
-        res.json(modifiedVideos);
 
+        // **Final Deduplication Step**: Remove any duplicates by video `_id`
+        const finalRecommendations = Array.from(new Map(modifiedVideos.map(v => [v._id, v])).values());
+
+        // Ensure the total number of videos is exactly 10
+        res.json(finalRecommendations.slice(0, TOTAL_VIDEOS));
 
     } catch (error) {
         console.error('Error getting recommendations:', error);
         res.status(500).send('Failed to get recommendations');
     }
 };
+
 
 
 
